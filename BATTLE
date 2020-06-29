@@ -14,47 +14,47 @@ namespace Battle
     {
         Label[,] grids = new Label[20, 10]; //長度*寬度的主要遊戲介面
         Label[,] next = new Label[4, 4];   //下一個的提示介面
-        bool[,] signs = new bool[24, 10];
+        bool[,] signs = new bool[24, 10]; //X
         Color[,] grids_color = new Color[24, 10]; //方塊顏色設定
         //使用uint而非int是因為uint是正整數而int有負數
-        uint block_row = 20;
-        uint block_col = 4;
-        uint block_type;
-        uint block_row_pre = 20;
-        uint block_col_pre = 4;
-        uint block_type_pre;
-        uint block_type_next;
-        bool block_changed = false;
+        uint block_row = 20; //方塊直行
+        uint block_col = 4; //方塊橫列
+        uint block_type;  //判斷方塊形狀
+        uint block_row_pre = 20;//X
+        uint block_col_pre = 4;//X
+        uint block_type_pre;//型態儲存
+        uint block_type_next;//下個型態儲存
+        bool block_changed = false;//移動轉換是否可以
         Random rander = new Random(System.DateTime.Now.Millisecond);
-        int timer_interval = 1010;
-        int game_mode = 1;
-        uint block_count = 0;
+        int timer_interval = 1010;//
+        int game_mode = 1;//難度設定
+        uint block_count = 0;//
         uint score = 0;//分數設定
 
-        public Form1()
+        public Form1()                                                                  //i為Y軸 j為X軸
         {
             InitializeComponent();
-            block_type = (uint)rander.Next(0, 7) + 1;
-            block_type_pre = block_type;
-            block_type_next = block_type;
+            block_type = (uint)rander.Next(0, 7) + 1;//隨機選取形狀
+            block_type_pre = block_type;//方塊形狀
+            block_type_next = block_type;//下個方塊形狀
 
-            for (int i = 0; i < 20; i++)//創造20*10的遊戲空間
+            for (int i = 0; i < 20; i++)//創造20*10的遊戲空間------原始的
                 for (int j = 0; j < 10; j++)
                 {
                     grids[i, j] = new Label();
-                    grids[i, j].Width = 30;
+                    grids[i, j].Width = 30;           //格子長寬
                     grids[i, j].Height = 30;
-                    grids[i, j].BorderStyle = BorderStyle.FixedSingle;
-                    grids[i, j].BackColor = Color.Black;
-                    grids[i, j].Left = 150 + 30 * j;
-                    grids[i, j].Top = 600 - i * 30;
-                    grids[i, j].Visible = true;
+                    grids[i, j].BorderStyle = BorderStyle.FixedSingle;    //格線
+                    grids[i, j].BackColor = Color.Black;      //格子顏色
+                    grids[i, j].Left = 150 + 30 * j;          //靠左
+                    grids[i, j].Top = 600 - i * 30;           //靠上
+                    grids[i, j].Visible = true;            //顯示此Label
                     this.Controls.Add(grids[i, j]);
                 }
 
 
-            for (int i = 0; i < 4; i++)//創造下一個的推薦空間
-                for (int j = 0; j < 3; j++)
+            for (int i = 0; i < 4; i++)//創造下一個的推薦空間--------下一個方塊
+                for (int j = 0; j < 3; j++)//同上
                 {
                     next[i, j] = new Label();
                     next[i, j].Width = 20;
@@ -70,9 +70,9 @@ namespace Battle
             init_game();
 
             System.Media.SoundPlayer player = new System.Media.SoundPlayer();//音樂設定
-            player.SoundLocation = "BATTLE.wav";
-            player.Load();
-            player.PlayLooping();
+            player.SoundLocation = "astronmia.wav";    //找到音樂檔
+            player.Load();                          //載入音樂
+            player.PlayLooping();                   //循環撥放*/
 
         }
 
@@ -104,7 +104,7 @@ namespace Battle
         {
             switch (type)
             {
-                case 1:
+                case 1:   //I方塊與轉向
                     signs[i, j] = signs[i + 1, j] = signs[i + 2, j] = signs[i + 3, j] = true;
                     grids_color[i, j] = grids_color[i + 1, j] = grids_color[i + 2, j] = grids_color[i + 3, j] = Color.Blue;
                     break;
@@ -112,11 +112,11 @@ namespace Battle
                     signs[i, j] = signs[i, j + 1] = signs[i, j + 2] = signs[i, j + 3] = true;
                     grids_color[i, j] = grids_color[i, j + 1] = grids_color[i, j + 2] = grids_color[i, j + 3] = Color.Blue;
                     break;
-                case 2:
+                case 2:   //O方塊
                     signs[i, j] = signs[i + 1, j] = signs[i, j + 1] = signs[i + 1, j + 1] = true;
                     grids_color[i, j] = grids_color[i + 1, j] = grids_color[i, j + 1] = grids_color[i + 1, j + 1] = Color.Yellow;
                     break;
-                case 3:
+                case 3:   //Z方塊與轉向
                     signs[i, j] = signs[i + 1, j] = signs[i + 1, j - 1] = signs[i, j + 1] = true;
                     grids_color[i, j] = grids_color[i + 1, j] = grids_color[i + 1, j - 1] = grids_color[i, j + 1] = Color.Red;
                     break;
@@ -124,7 +124,7 @@ namespace Battle
                     signs[i, j] = signs[i - 1, j] = signs[i, j + 1] = signs[i + 1, j + 1] = true;
                     grids_color[i, j] = grids_color[i - 1, j] = grids_color[i, j + 1] = grids_color[i + 1, j + 1] = Color.Red;
                     break;
-                case 4:
+                case 4:   //S方塊與轉向
                     signs[i, j] = signs[i, j - 1] = signs[i + 1, j] = signs[i + 1, j + 1] = true;
                     grids_color[i, j] = grids_color[i, j - 1] = grids_color[i + 1, j] = grids_color[i + 1, j + 1] = Color.Green;
                     break;
@@ -132,7 +132,7 @@ namespace Battle
                     signs[i, j] = signs[i + 1, j] = signs[i, j + 1] = signs[i - 1, j + 1] = true;
                     grids_color[i, j] = grids_color[i + 1, j] = grids_color[i, j + 1] = grids_color[i - 1, j + 1] = Color.Green;
                     break;
-                case 5:
+                case 5:   //L方塊與轉向
                     signs[i, j] = signs[i + 1, j] = signs[i + 1, j + 1] = signs[i + 1, j + 2] = true;
                     grids_color[i, j] = grids_color[i + 1, j] = grids_color[i + 1, j + 1] = grids_color[i + 1, j + 2] = Color.Orange;
                     break;
@@ -148,7 +148,7 @@ namespace Battle
                     signs[i, j] = signs[i, j + 1] = signs[i - 1, j + 1] = signs[i - 2, j + 1] = true;
                     grids_color[i, j] = grids_color[i, j + 1] = grids_color[i - 1, j + 1] = grids_color[i - 2, j + 1] = Color.Orange;
                     break;
-                case 6:
+                case 6:   //J方塊與轉向
                     signs[i, j] = signs[i + 1, j] = signs[i + 1, j - 1] = signs[i + 1, j - 2] = true;
                     grids_color[i, j] = grids_color[i + 1, j] = grids_color[i + 1, j - 1] = grids_color[i + 1, j - 2] = Color.LightBlue;
                     break;
@@ -165,7 +165,7 @@ namespace Battle
                     grids_color[i, j] = grids_color[i, j - 1] = grids_color[i - 1, j - 1] = grids_color[i - 2, j - 1] = Color.LightBlue;
                     break;
 
-                case 7:
+                case 7:   //T方塊與轉向
                     signs[i, j] = signs[i, j - 1] = signs[i, j + 1] = signs[i + 1, j] = true;
                     grids_color[i, j] = grids_color[i, j - 1] = grids_color[i, j + 1] = grids_color[i + 1, j] = Color.Purple;
                     break;
@@ -181,12 +181,12 @@ namespace Battle
                     signs[i, j] = signs[i, j - 1] = signs[i + 1, j] = signs[i - 1, j] = true;
                     grids_color[i, j] = grids_color[i, j - 1] = grids_color[i + 1, j] = grids_color[i - 1, j] = Color.Purple;
                     break;
-            }
+            }//方塊下一步
         }
 
         void erase_block(uint i, uint j, uint type)//遊戲的方塊設定
         {
-            switch (type)
+            switch (type)    //方塊清除
             {
                 case 1:
                     signs[i, j] = signs[i + 1, j] = signs[i + 2, j] = signs[i + 3, j] = false;
@@ -245,12 +245,12 @@ namespace Battle
                 case 37:
                     signs[i, j] = signs[i, j - 1] = signs[i + 1, j] = signs[i - 1, j] = false;
                     break;
-            }
+            }   //方塊清除
         }
 
         bool y_direction(uint type, uint i, uint j)//遊戲的Y軸設定
         {
-            switch (type)
+            switch (type)      //判斷方塊下一格是否有方塊或邊界
             {
                 case 1:
                     if (i != 0 && !signs[i - 1, j]) return true;
@@ -330,12 +330,12 @@ namespace Battle
 
                 default:
                     return false;
-            }
+            }   //判斷方塊下一格是否有方塊或邊界
         }
 
         bool x_direction(uint type, uint i, uint j, int d)//遊戲的X軸設定
         {
-            switch (type)
+            switch (type)   //判斷方塊左方或右方是否為邊界或方塊
             {
                 case 1:
                     if (d == -1)
@@ -567,7 +567,7 @@ namespace Battle
 
                 default:
                     return false;
-            }
+            }   //判斷方塊左方或右方是否為邊界或方塊
         }
 
         void show_grids()//方塊顯示
@@ -576,12 +576,12 @@ namespace Battle
             for (i = 0; i < 20; i++)
                 for (j = 0; j < 10; j++)
                     if (signs[i, j])
-                        grids[i, j].BackColor = grids_color[i, j];
+                        grids[i, j].BackColor = grids_color[i, j];     //如果該處有某方塊則將背景改為某方塊顏色
                     else
                         grids[i, j].BackColor = Color.Black;
         }
 
-        void display_next_block(uint type)//下一個方塊設定
+        void display_next_block(uint type)//下一個方塊設定------與上方遊戲方塊轉動設定相同
         {
             for (int i = 0; i < 4; i++)
                 for (int j = 0; j < 3; j++)
@@ -615,12 +615,13 @@ namespace Battle
 
         private void timer1_Tick(object sender, EventArgs e)//時間設定
         {
-            if (y_direction(block_type, block_row, block_col))
+            if (y_direction(block_type, block_row, block_col))//判斷頂端-1是否為空
             {
-                block_row_pre = block_row; block_row_pre = block_row; block_type_pre = block_type;
+                block_row_pre = block_row;
+                block_type_pre = block_type;
                 block_row--;
 
-                if (block_row == 19)
+                if (block_row == 19)//右方面板
                 {
                     block_type_next = (uint)rander.Next(0, 7) + 1;
                     display_next_block(block_type_next);
@@ -638,13 +639,13 @@ namespace Battle
                         label_level.Text = "Level:" + (1010 - timer_interval) / 50;
                     }
                 }
-                erase_block(block_row_pre, block_col_pre, block_type_pre);
-                update_block(block_row, block_col, block_type);
-                show_grids();
+                erase_block(block_row_pre, block_col_pre, block_type_pre);  //清除此刻方塊
+                update_block(block_row, block_col, block_type);             //載入方塊下一步
+                show_grids();                                               //印出方塊
                 block_row_pre = block_row;
-                block_changed = false;
-            }
-            else
+                block_changed = false;             //固定的方塊
+            }//判斷是否到達頂端
+            else//到達頂端
             {
                 show_grids();
                 full_line_check();
@@ -673,22 +674,22 @@ namespace Battle
             uint i, j;
 
             i = 0;
-            while (i < 20)
+            while (i < 20)//1橫排1橫排去判斷是否滿的
             {
                 row_sum = 0;
                 for (j = 0; j < 10; j++)
                     if (signs[i, j]) row_sum++;
 
-                if (row_sum == 10)
+                if (row_sum == 10)//橫排滿時執行
                 {
                     score += 20;
                     label_score.Text = "Score:" + score.ToString();
                     for (j = 0; j < 10; j++)
                         signs[i, j] = false;
 
-                    show_grids(); // show a black line 
+                    show_grids(); // show a black line  
 
-                    for (uint y = i; y < 21; y++)
+                    for (uint y = i; y < 21; y++)   //將刪除後的那橫行上面方塊往下放
                         for (j = 0; j < 10; j++)
                         {
                             signs[y, j] = signs[y + 1, j];
@@ -834,8 +835,8 @@ namespace Battle
         {
             if (e.KeyCode == Keys.P)//暫停遊戲
             {
-                if (game_mode == 0) { game_mode = 1; timer1.Enabled = true; }
-                else { game_mode = 0; timer1.Enabled = false; }
+                if (game_mode == 0) { game_mode = 1; timer1.Enabled = true; label_info.Text = null; }
+                else { game_mode = 0; timer1.Enabled = false; label_info.Text = "Pass!"; }
             }
 
             if (e.KeyCode == Keys.Left)//往左
@@ -856,7 +857,7 @@ namespace Battle
                 }
             }
 
-            if (e.KeyCode == Keys.Z)//轉換方向
+            if (e.KeyCode == Keys.Up)//轉換方向
             {
                 block_type_pre = block_type;
                 block_col_pre = block_col; block_row_pre = block_row;
@@ -889,8 +890,11 @@ namespace Battle
                 label_level.Text = "Level:" + (1010 - timer_interval) / 50;
             }
 
-            if (e.KeyCode == Keys.Down)//加送下降
-                timer1.Interval = 15;
+            if (e.KeyCode == Keys.Down)//加速下降
+                timer1.Interval = 20;
+
+            if (e.KeyCode == Keys.Space)
+                timer1.Interval = 1;
 
             if (block_changed)
             {
@@ -900,15 +904,25 @@ namespace Battle
                 block_row_pre = block_row; block_col_pre = block_col; block_type_pre = block_type;
                 block_changed = false;
             }
+            if (e.KeyCode == Keys.Escape)  //遊戲過程中直接重新開始
+            {
+                init_game();
+                label_info.Text = "";
+                button1.Visible = false;
+                button1.Enabled = false;
+                timer1.Enabled = true;
+            }
+                
         }
 
-        private void button1_Click(object sender, EventArgs e)//從新開始遊戲
+        private void button1_Click(object sender, EventArgs e)//重新開始遊戲
         {
             init_game();
             label_info.Text = "";
             button1.Visible = false;
             button1.Enabled = false;
             timer1.Enabled = true;
+             
         }
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
@@ -917,6 +931,11 @@ namespace Battle
             {
                 timer1.Interval = timer_interval;
             }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
